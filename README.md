@@ -1,4 +1,4 @@
-# 语言学习贪吃蛇 / Language Learning Snake / Lernen mit Schlange
+# Language Learning Snake / 语言学习贪吃蛇 / Lernen mit Schlange
 
 <div align="center">
   
@@ -10,58 +10,6 @@
 [![Font Awesome](https://img.shields.io/badge/Font%20Awesome-528DD7?style=flat-square&logo=font-awesome&logoColor=white)](https://fontawesome.com/)
 
 </div>
-
----
-
-## 🇨🇳 中文版本
-
-### 简介
-这是一个基于网页的德语单词学习游戏，将经典的贪吃蛇玩法与语言学习相结合。通过控制蛇吃掉正确的字母来拼写德语单词，在游戏中轻松学习德语词汇。
-
-### ✨ 主要特性
-- 🎯 **多难度等级**：支持 A1、A2、B1、B2、C 五个难度等级，适合不同水平的德语学习者
-- 🎨 **像素风格界面**：经典黑白像素风格设计，简洁美观
-- 📚 **双语释义**：每个单词提供中文和英文释义
-- 🏆 **积分系统**：记录当前分数、单词进度和最高分
-- 👤 **用户账户**：本地保存每个用户的游戏记录
-- ⏸️ **游戏控制**：支持暂停、重新开始功能
-- 📱 **响应式设计**：适配不同屏幕尺寸
-
-### 🎮 游戏玩法
-1. 使用方向键（↑↓←→）或 WASD 键控制蛇的移动
-2. 游戏区域会随机出现字母，按顺序吃掉正确的字母来完成德语单词
-3. 吃掉正确的字母：推进单词进度，获得分数
-4. 吃掉错误的字母：蛇身会变长
-5. 撞墙或撞到自己：游戏结束
-6. 每完成一个单词得 1 分，分数越高游戏速度越快
-
-### 📋 功能说明
-- **难度选择**：在开始界面选择适合你水平的难度等级 A1（350词）A2（800词）B1（800词）B2（870词）C（570词）
-- **单词显示**：实时显示当前单词、中文和英文释义
-- **进度追踪**：显示当前分数、单词进度和最高分记录
-- **用户登录**：首次输入用户名即可自动注册，数据保存在本地浏览器
-
-### 🚀 快速开始
-1. 克隆或下载本项目
-2. 直接用浏览器打开 `Schlange.html` 文件
-3. 无需安装任何依赖或服务器
-
-### 📁 项目结构
-.
-├── Schlange.html # 主程序文件（包含 HTML、CSS、JavaScript）
-└── README.md # 项目说明文档
-
-
-### 🛠️ 技术栈
-- **前端**：HTML5, CSS3, JavaScript (ES6+)
-- **字体**：Press Start 2P (像素风格字体)
-- **图标**：Font Awesome 6.4.0
-- **存储**：LocalStorage (本地浏览器存储)
-
-### 📝 注意事项
-- 所有数据保存在浏览器本地，清除浏览器数据会丢失游戏记录
-- 单词库内嵌在 HTML 文件中，可根据需要自定义修改
-- 建议使用现代浏览器（Chrome、Firefox、Edge、Safari）以获得最佳体验
 
 ---
 
@@ -98,11 +46,6 @@ A web-based German vocabulary learning game that combines the classic Snake game
 2. Open `Schlange.html` directly in your browser
 3. No installation or server required
 
-### 📁 Project Structure
-.
-├── Schlange.html # Main program file (contains HTML, CSS, JavaScript)
-└── README.md # Project documentation
-
 
 ### 🛠️ Tech Stack
 - **Frontend**：HTML5, CSS3, JavaScript (ES6+)
@@ -114,6 +57,53 @@ A web-based German vocabulary learning game that combines the classic Snake game
 - All data is saved locally in the browser; clearing browser data will result in loss of game records
 - Word pool is embedded in the HTML file and can be customized as needed
 - Recommended to use modern browsers (Chrome, Firefox, Edge, Safari) for best experience
+
+---
+
+
+## 🇨🇳 中文版本
+
+### 简介
+这是一个基于网页的德语单词学习游戏，将经典的贪吃蛇玩法与语言学习相结合。通过控制蛇吃掉正确的字母来拼写德语单词，在游戏中轻松学习德语词汇。
+
+### ✨ 主要特性
+- 🎯 **多难度等级**：支持 A1、A2、B1、B2、C 五个难度等级，适合不同水平的德语学习者
+- 🎨 **像素风格界面**：经典黑白像素风格设计，简洁美观
+- 📚 **双语释义**：每个单词提供中文和英文释义
+- 🏆 **积分系统**：记录当前分数、单词进度和最高分
+- 👤 **用户账户**：本地保存每个用户的游戏记录
+- ⏸️ **游戏控制**：支持暂停、重新开始功能
+- 📱 **响应式设计**：适配不同屏幕尺寸
+
+### 🎮 游戏玩法
+1. 使用方向键（↑↓←→）或 WASD 键控制蛇的移动
+2. 游戏区域会随机出现字母，按顺序吃掉正确的字母来完成德语单词
+3. 吃掉正确的字母：推进单词进度，获得分数
+4. 吃掉错误的字母：蛇身会变长
+5. 撞墙或撞到自己：游戏结束
+6. 每完成一个单词得 1 分，分数越高游戏速度越快
+
+### 📋 功能说明
+- **难度选择**：在开始界面选择适合你水平的难度等级 A1（350词）A2（800词）B1（800词）B2（870词）C（570词）
+- **单词显示**：实时显示当前单词、中文和英文释义
+- **进度追踪**：显示当前分数、单词进度和最高分记录
+- **用户登录**：首次输入用户名即可自动注册，数据保存在本地浏览器
+
+### 🚀 快速开始
+1. 克隆或下载本项目
+2. 直接用浏览器打开 `Schlange.html` 文件
+3. 无需安装任何依赖或服务器
+
+### 🛠️ 技术栈
+- **前端**：HTML5, CSS3, JavaScript (ES6+)
+- **字体**：Press Start 2P (像素风格字体)
+- **图标**：Font Awesome 6.4.0
+- **存储**：LocalStorage (本地浏览器存储)
+
+### 📝 注意事项
+- 所有数据保存在浏览器本地，清除浏览器数据会丢失游戏记录
+- 单词库内嵌在 HTML 文件中，可根据需要自定义修改
+- 建议使用现代浏览器（Chrome、Firefox、Edge、Safari）以获得最佳体验
 
 ---
 
@@ -150,11 +140,6 @@ Ein webbasiertes Spiel zum Erlernen deutscher Vokabeln, das klassisches Schlange
 2. Öffnen Sie `Schlange.html` direkt in Ihrem Browser
 3. Keine Installation oder Server erforderlich
 
-### 📁 Projektstruktur
-.
-├── Schlange.html # Hauptprogrammdatei (enthält HTML, CSS, JavaScript)
-└── README.md # Projektdokumentation
-
 
 ### 🛠️ Technologie-Stack
 - **Frontend**：HTML5, CSS3, JavaScript (ES6+)
@@ -171,11 +156,11 @@ Ein webbasiertes Spiel zum Erlernen deutscher Vokabeln, das klassisches Schlange
 
 ## 📞 Contact / 联系方式 / Kontakt
 
-If you have any questions, suggestions, or feedback, please contact us via the settings button (⚙️) in the top right corner of the game interface.
+If you have any questions, suggestions, or feedback, please contact us via the contact button in the top right corner of the game interface.
 
-如有问题、建议或反馈，请通过游戏界面右上角的设置按钮（⚙️）联系我们。
+如有问题、建议或反馈，请通过游戏界面右上角的联系按钮联系我们。
 
-Bei Fragen, Vorschlägen oder Feedback kontaktieren Sie uns bitte über die Einstellungstaste (⚙️) in der oberen rechten Ecke der Spieloberfläche.
+Bei Fragen, Vorschlägen oder Feedback kontaktieren Sie uns bitte über die Kontakt-Button in der oberen rechten Ecke der Spieloberfläche.
 
 ---
 

@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>语言学习贪吃蛇 - 吃掉字母学单词</title>
+    <meta name="theme-color" content="#000000">
+    <meta name="format-detection" content="telephone=no">
+    <!-- 可选（做成 Web App 时再开启）
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    -->
+    <title>Language Learning Snake - Eat Letters to Learn Words</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,6 +102,7 @@
         
         header {
             background: #000;
+            /*Katanad - apprilzzz*/
             color: #fff;
             padding: 20px 32px;
             text-align: center;
@@ -146,6 +154,11 @@
             display: flex;
             flex-wrap: wrap;
             min-height: 600px;
+        }
+        /* 移动端：禁止默认触摸滚动/回弹，让游戏接管手势 */
+        html, body {
+            touch-action: none;
+            overscroll-behavior: none;
         }
         /* 进入游戏后仅显示游戏区域，铺满宽度 */
         .content.game-only {
@@ -235,6 +248,8 @@
             border-radius: 0;
             border: 4px solid #fff;
             box-shadow: 2px 2px 0 #666, -2px -2px 0 #ccc;
+            width: 100%;
+            height: auto;
             /* 添加 margin 可调整画布位置，如：margin: 10px auto; */
         }
         
@@ -579,6 +594,54 @@
             margin-top: 16px;
             gap: 12px;
         }
+        /* 开始覆盖层在小屏下允许滚动，避免内容被裁切 */
+        .start-overlay {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            /* 覆盖全局 touch-action: none，允许在覆盖层内滚动 */
+            touch-action: auto;
+        }
+        /* 小屏适配：单列布局，收紧边距，按钮更易点击 */
+        @media (max-width: 600px) {
+            /* 开始面板网格：在手机上直接隐藏（只保留难度+进入按钮） */
+            .start-grid { display: none !important; }
+            .start-panel {
+                max-width: 100%;
+                padding: 16px;
+                box-shadow: 2px 2px 0 #666, -2px -2px 0 #ccc;
+            }
+            .start-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+            .start-grid {
+                grid-template-columns: 1fr; /* 两列 -> 一列 */
+                gap: 12px;
+            }
+            .start-card {
+                padding: 14px;
+            }
+            .difficulty select {
+                font-size: 0.8rem; /* 视觉上不小，避免放大 */
+                padding: 12px 14px;
+            }
+            .start-actions {
+                justify-content: stretch;
+                margin-top: 12px;
+            }
+            .start-actions .btn {
+                width: 100%; /* 铺满行，便于点击 */
+                padding: 12px 16px;
+                font-size: 0.8rem;
+            }
+        }
+        /* 开始面板内的输入/选择器：避免 iOS 输入时缩放 */
+        .start-panel input[type="text"],
+        .start-panel select {
+            font-size: 16px;
+        }
         
         /* 游戏顶部词汇栏 */
         .game-topbar {
@@ -773,6 +836,113 @@
                 font-size: 1rem;
             }
         }
+
+        /* 手机端纵向布局与画布适配（追加样式） */
+        @media (max-width: 900px) {
+            .game-section {
+                padding: 8px 12px;
+            }
+
+            /* 游戏中主容器强制纵向单列 */
+            #contentRoot.game-only {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px;
+            }
+
+            /* 顶部信息区与单词区占满宽度 */
+            .word-container,
+            .game-info {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .game-info {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .info-card {
+                flex: 1 1 120px;
+                min-width: 120px;
+            }
+
+            /* 画布容器铺满 */
+            .canvas-wrapper {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 8px 0 !important;
+            }
+
+            /* 画布宽度100%，高度由JS动态设定，像素风清晰化 */
+            #gameCanvas {
+                width: 100% !important;
+                height: auto;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+
+            .controls, .touch-controls {
+                width: 100%;
+            }
+
+            /* 单词显示缩小且避免溢出，释义可换行 */
+            .word-container {
+                font-size: 1.4rem !important;
+                letter-spacing: 4px !important;
+                display: block !important;          /* 覆盖基样式的flex，便于换行 */
+                white-space: normal !important;     /* 关键：允许换行，覆盖nowrap */
+                overflow-wrap: anywhere;
+                word-break: break-word;
+                text-align: center;
+                line-height: 1.4;
+            }
+
+            .meaning {
+                white-space: normal !important;
+                line-height: 1.6;
+            }
+
+            .info-card .label { font-size: 0.8rem; }
+            .info-card .value { font-size: 1rem; }
+        }
+
+        /* 标题在移动端的适配：缩小、允许换行、避免与设置按钮重叠 */
+        @media (max-width: 900px) {
+            header {
+                padding: 12px 16px;
+            }
+            header h1 {
+                font-size: 1.3rem;
+                line-height: 1.3;
+                padding-right: 56px;      /* 预留按钮空间，避免文本被遮挡 */
+                white-space: normal;       /* 允许换行 */
+                overflow-wrap: anywhere;   /* 任意位置断行 */
+                word-break: break-word;    /* 单词内断行，防止溢出 */
+                margin: 0;
+            }
+            .settings-btn {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            header h1 {
+                font-size: 1.1rem;
+                padding-right: 48px;
+            }
+            .settings-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -786,10 +956,10 @@
             页眉：标题和副标题
         -->
         <header>
-            <h1><i class="fas fa-snake"></i> 语言学习贪吃蛇</h1>
-            <p class="subtitle">吃掉字母学单词 - 德语学习游戏</p>
-            <button class="settings-btn" id="settingsBtn" aria-label="设置">
-                <i class="fas fa-cog"></i>
+            <h1><i class="fas fa-snake"></i> Language Learning Snake</h1>
+            <p class="subtitle">Eat Letters to Learn Words - German Learning Game</p>
+            <button class="settings-btn" id="settingsBtn" aria-label="Email">
+                <i class="fas fa-envelope"></i>
             </button>
         </header>
         <div class="content" id="contentRoot">
@@ -818,7 +988,7 @@
                          ============================================
                     -->
                     <div class="word-display" id="topWordPanel">
-                        <h3 style="margin:0 0 6px; font-size:0.7rem; color:#ccc; font-weight:normal;">当前德语单词</h3>
+                        <h3 style="margin:0 0 6px; font-size:0.7rem; color:#ccc; font-weight:normal;">Current German Word</h3>
                         <!-- ============================================
                              区域3：单词容器（显示德语单词）
                              CSS样式位置：第224行 .word-container
@@ -836,8 +1006,8 @@
                              ============================================
                         -->
                         <div class="meaning">
-                            <p><i class="fas fa-language"></i> <strong>中文：</strong> <span id="chineseMeaning">苹果</span></p>
-                            <p><i class="fas fa-language"></i> <strong>英文：</strong> <span id="englishMeaning">apple</span></p>
+                            <p><i class="fas fa-language"></i> <strong>Chinese: </strong> <span id="chineseMeaning">苹果</span></p>
+                            <p><i class="fas fa-language"></i> <strong>English: </strong> <span id="englishMeaning">apple</span></p>
                         </div>
                     </div>
                     <!-- ============================================
@@ -847,7 +1017,7 @@
                          调整卡片间距：修改 gap: 12px;
                          ============================================
                     -->
-                    <div class="game-info">
+                <div class="game-info">
                         <!-- ============================================
                              区域6：单个统计卡片（当前分数）
                              CSS样式位置：第156行 .info-card
@@ -856,19 +1026,19 @@
                              数值样式：第177行 .info-card .value
                              ============================================
                         -->
-                        <div class="info-card">
-                            <h3>当前分数</h3>
-                            <div class="value" id="currentScore">0</div>
-                        </div>
-                        <div class="info-card">
-                            <h3>单词进度</h3>
-                            <div class="value" id="wordProgress">0/0</div>
-                        </div>
-                        <div class="info-card">
-                            <h3>最高分</h3>
-                            <div class="value" id="highScore">0</div>
-                        </div>
+                    <div class="info-card">
+                        <h3>Current Score</h3>
+                        <div class="value" id="currentScore">0</div>
                     </div>
+                    <div class="info-card">
+                        <h3>Word Progress</h3>
+                        <div class="value" id="wordProgress">0/0</div>
+                    </div>
+                    <div class="info-card">
+                        <h3>High Score</h3>
+                        <div class="value" id="highScore">0</div>
+                    </div>
+                </div>
                 </div>
                 <!-- ============================================
                      区域7：游戏画布（贪吃蛇游戏区域）
@@ -878,7 +1048,9 @@
                      ============================================
                 -->
                 <div class="canvas-wrapper">
-                    <canvas id="gameCanvas" width="980" height="400"></canvas>
+                    <div class="canvas-wrapper">
+                        <canvas id="gameCanvas" width="980" height="400"></canvas>
+                    </div>
                 </div>
                 <!-- ============================================
                      区域9：控制按钮区域（开始/重新开始/暂停）
@@ -888,9 +1060,9 @@
                      ============================================
                 -->
                 <div class="controls">
-                    <button class="btn" id="startBtn"><i class="fas fa-play"></i> 开始游戏</button>
-                    <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-redo"></i> 重新开始</button>
-                    <button class="btn btn-secondary" id="pauseBtn"><i class="fas fa-pause"></i> 暂停</button>
+                    <button class="btn" id="startBtn"><i class="fas fa-play"></i> Start Game</button>
+                    <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-redo"></i> Restart</button>
+                    <button class="btn btn-secondary" id="pauseBtn"><i class="fas fa-pause"></i> Pause</button>
                 </div>
                 <!-- 字母选项区（由JS动态生成） -->
                 <div class="letter-options" id="letterOptions">
@@ -901,40 +1073,40 @@
                 右侧：信息区域
             -->
             <div class="info-section" id="startInfoSection">
-                <h2 class="section-title"><i class="fas fa-book"></i> 单词学习</h2>
+                <h2 class="section-title"><i class="fas fa-book"></i> Word Learning</h2>
                 <!-- 当前单词及释义展示（已在游戏顶部展示） -->
                 <!-- 用户账户区（将显示在开始界面） -->
                 <div class="user-section" id="startUserSection">
-                    <h3><i class="fas fa-user"></i> 用户账户</h3>
+                    <h3><i class="fas fa-user"></i> User Account</h3>
                     <div id="loginSection">
                         <div class="form-group">
-                            <label for="username">用户名</label>
-                            <input type="text" id="username" placeholder="输入用户名">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" placeholder="Enter username">
                         </div>
                         <div class="controls">
-                            <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> 登录/注册</button>
+                            <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login / Register</button>
                         </div>
                     </div>
                     <div id="userInfo" style="display:none">
                         <div class="user-info">
-                            <p>欢迎, <span id="currentUser" class="highlight">玩家</span>!</p>
-                            <p>当前最高分: <span id="userHighScore" class="highlight">0</span> 分</p>
-                            <p>总完成单词: <span id="totalWords" class="highlight">0</span> 个</p>
+                            <p>Welcome, <span id="currentUser" class="highlight">Player</span>!</p>
+                            <p>High Score: <span id="userHighScore" class="highlight">0</span> points</p>
+                            <p>Words Completed: <span id="totalWords" class="highlight">0</span></p>
                         </div>
-                        <button class="btn btn-secondary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出登录</button>
+                        <button class="btn btn-secondary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
                     </div>
                 </div>
                 <!-- 游戏说明区（开始界面显示） -->
                 <div class="instructions" id="startInstructions">
-                    <h3><i class="fas fa-info-circle"></i> 游戏说明</h3>
+                    <h3><i class="fas fa-info-circle"></i> Game Instructions</h3>
                     <ul>
-                        <li>使用 <span class="highlight">方向键</span> 或 <span class="highlight">WASD</span> 控制蛇的移动</li>
-                        <li>当前单词显示在顶部，你需要按顺序吃掉单词的字母</li>
-                        <li>吃掉 <span class="highlight">正确的字母</span>（绿色）推进单词进度</li>
-                        <li>吃掉 <span class="highlight">错误的字母</span>（红色）蛇身变长两格</li>
-                        <li>每完成一个单词获得 <span class="highlight">1分</span></li>
-                        <li>撞到墙壁或自己的身体游戏结束</li>
-                        <li>分数将保存在本地账户中</li>
+                        <li>Use <span class="highlight">arrow keys</span> or <span class="highlight">WASD</span> to control the snake</li>
+                        <li>The current word is shown at the top. Eat the letters in order</li>
+                        <li>Eat the <span class="highlight">correct letter</span> (green) to advance word progress</li>
+                        <li>Eat the <span class="highlight">wrong letter</span> (red) and the snake grows by 2 segments</li>
+                        <li>Complete a word to earn <span class="highlight">1 point</span></li>
+                        <li>Game ends if you hit the wall or your own body</li>
+                        <li>Scores are saved in your local account</li>
                     </ul>
                 </div>
             </div>
@@ -945,10 +1117,11 @@
     <div class="start-overlay" id="startOverlay">
         <div class="start-panel">
             <div class="start-header">
-                <h2 class="section-title" style="margin:0"><i class="fas fa-rocket"></i> 开始游戏</h2>
+                <h2 class="section-title" style="margin:0"><i class="fas fa-rocket"></i> Start Game</h2>
                 <div class="difficulty">
-                    <label for="difficultySelect" class="highlight">选择难度</label>
-                    <select id="difficultySelect" aria-label="选择难度">
+                    /*monkeydtree*/
+                    <label for="difficultySelect" class="highlight">Select Difficulty</label>
+                    <select id="difficultySelect" aria-label="Select Difficulty">
                         <option value="A1">A1</option>
                         <option value="A2" selected>A2</option>
                         <option value="B1">B1</option>
@@ -959,16 +1132,16 @@
             </div>
             <div class="start-grid">
                 <div class="start-card">
-                    <h3 style="margin-bottom:10px"><i class="fas fa-user"></i> 用户账户</h3>
+                    <h3 style="margin-bottom:10px"><i class="fas fa-user"></i> User Account</h3>
                     <div id="startLoginMount"></div>
                 </div>
                 <div class="start-card">
-                    <h3 style="margin-bottom:10px"><i class="fas fa-info-circle"></i> 游戏说明</h3>
+                    <h3 style="margin-bottom:10px"><i class="fas fa-info-circle"></i> Game Instructions</h3>
                     <div id="startInstructionsMount"></div>
                 </div>
             </div>
             <div class="start-actions">
-                <button class="btn" id="enterGameBtn"><i class="fas fa-play"></i> 进入游戏</button>
+                <button class="btn" id="enterGameBtn"><i class="fas fa-play"></i> Enter Game</button>
             </div>
         </div>
     </div>
@@ -976,22 +1149,22 @@
     <!-- 游戏结束模态框 -->
     <div class="modal-overlay" id="gameOverModal" aria-hidden="true">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle">
-            <h2 id="gameOverTitle"><i class="fas fa-flag-checkered"></i> 游戏结束</h2>
-            <p class="sub">做得不错！再来一局练习更多单词吧～</p>
+            <h2 id="gameOverTitle"><i class="fas fa-flag-checkered"></i> Game Over</h2>
+            <p class="sub">Well done! Play again to practice more words~</p>
             <div class="stats">
                 <div class="stat">
-                    <div class="label">本次得分</div>
+                    <div class="label">This Score</div>
                     <div class="value" id="finalScore">0</div>
                 </div>
                 <div class="stat">
-                    <div class="label">最高分</div>
+                    <div class="label">Best Score</div>
                     <div class="value" id="bestScore">0</div>
                 </div>
             </div>
             <!-- 游戏结束界面的难度选择 -->
             <div class="difficulty" style="margin: 20px 0;">
-                <label for="retryDifficultySelect" class="highlight">选择难度</label>
-                <select id="retryDifficultySelect" aria-label="选择难度">
+                <label for="retryDifficultySelect" class="highlight">Select Difficulty</label>
+                <select id="retryDifficultySelect" aria-label="Select Difficulty">
                     <option value="A1">A1</option>
                     <option value="A2">A2</option>
                     <option value="B1">B1</option>
@@ -1000,8 +1173,8 @@
                 </select>
             </div>
             <div class="actions">
-                <button class="btn" id="restartBtn"><i class="fas fa-rotate-right"></i> 再玩一次</button>
-                <button class="btn btn-ghost" id="closeModalBtn"><i class="fas fa-times"></i> 返回</button>
+                <button class="btn" id="restartBtn"><i class="fas fa-rotate-right"></i> Play Again</button>
+                <button class="btn btn-ghost" id="closeModalBtn"><i class="fas fa-times"></i> Return</button>
             </div>
         </div>
     </div>
@@ -1009,19 +1182,47 @@
     <!-- 设置弹窗 -->
     <div class="settings-modal-overlay" id="settingsModal" aria-hidden="true">
         <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-            <h2 id="settingsTitle"><i class="fas fa-cog"></i> 设置</h2>
+            <h2 id="settingsTitle"><i class="fas fa-envelope"></i> Contact</h2>
             <div class="contact-info">
-                <p><strong>联系方式</strong></p>
-                <p>📧 邮箱：<a href="mailto:your-email@example.com" id="contactEmail">monkeydtree@126.com</a></p>
-                <p style="margin-top: 16px; font-size: 0.6rem; color: #888;">如有问题或建议，欢迎联系</p>
+                <p><strong>Contact</strong></p>
+                <p>📧 Email: <a href="mailto:your-email@example.com" id="contactEmail">monkeydtree@126.com</a></p>
+                <p>📕 Xiaohongshu: <a href="https://www.xiaohongshu.com/user/profile/49719656764" id="contactXiaohongshu">aPrilTag</a></p>
+                <p>📺 Bilibili: <a href="https://space.bilibili.com/3632313994840116" id="contactBilibili">AprillTag_zzz</a></p>
+                <p style="margin-top: 16px; font-size: 0.6rem; color: #888;">Feel free to contact us with questions or suggestions</p>
             </div>
-            <button class="btn settings-close-btn" id="settingsCloseBtn">关闭</button>
+            <button class="btn settings-close-btn" id="settingsCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- 登录弹窗（移动端使用） -->
+    <div class="modal-overlay" id="loginModal" aria-hidden="true" style="display:none">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+            <h2 id="loginTitle"><i class="fas fa-user"></i> User Account</h2>
+            <div class="form-group" style="margin-top:12px">
+                <label for="usernameMobile">Username</label>
+                <input type="text" id="usernameMobile" placeholder="Enter username" autocomplete="username" inputmode="text">
+            </div>
+            <div class="actions" style="margin-top:16px; display:flex; gap:10px; justify-content:flex-end">
+                <button class="btn" id="loginConfirmBtn"><i class="fas fa-sign-in-alt"></i> Login / Register</button>
+                <button class="btn btn-ghost" id="loginCancelBtn"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏说明弹窗（移动端使用） -->
+    <div class="modal-overlay" id="instructionsModal" aria-hidden="true" style="display:none">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="instructionsTitle">
+            <h2 id="instructionsTitle"><i class="fas fa-info-circle"></i> Game Instructions</h2>
+            <div id="instructionsContent" style="margin-top:12px"></div>
+            <div class="actions" style="margin-top:16px; display:flex; gap:10px; justify-content:flex-end">
+                <button class="btn btn-ghost" id="instructionsCloseBtn"><i class="fas fa-check"></i> Got it</button>
+            </div>
         </div>
     </div>
 
     <!-- 词库内嵌：请在下方对应难度的脚本中填写数组数据（有效JSON） -->
     <!-- A1 难度词库（初级，示例已填充，请自行补充） -->
-    <script type="application/json" id=1"words-A1">[
+    <script type="application/json" id="words-A1">[
         {"german": "Hallo", "chinese": "你好", "english": "hello"},
         {"german": "Tschüss", "chinese": "再见", "english": "bye"},
         {"german": "Danke", "chinese": "谢谢", "english": "thank you"},
@@ -11212,10 +11413,23 @@
         // CANVAS_WIDTH/HEIGHT: 画布宽度和高度（像素）
         // GRID_WIDTH/HEIGHT: 网格的宽度和高度（以格子为单位）
         const GRID_SIZE = 20;
-        const CANVAS_WIDTH = 980;
-        const CANVAS_HEIGHT = 400;
-        const GRID_WIDTH = CANVAS_WIDTH / GRID_SIZE;  // 49格宽 (980/20)
-        const GRID_HEIGHT = CANVAS_HEIGHT / GRID_SIZE; // 20格高
+        let CANVAS_WIDTH = 980;
+        let CANVAS_HEIGHT = 400;
+        let GRID_WIDTH = Math.floor(CANVAS_WIDTH / GRID_SIZE);  // 49格宽 (980/20)
+        let GRID_HEIGHT = Math.floor(CANVAS_HEIGHT / GRID_SIZE); // 20格高
+
+        // 根据当前canvas CSS尺寸同步逻辑宽高与网格（移动端适配后调用）
+        function updateGridFromCanvas() {
+            const canvas = document.getElementById('gameCanvas');
+            if (!canvas) return;
+            const styles = getComputedStyle(canvas);
+            const cssW = Math.max(1, Math.floor(parseFloat(styles.width)));
+            const cssH = Math.max(1, Math.floor(parseFloat(styles.height)));
+            CANVAS_WIDTH = cssW;
+            CANVAS_HEIGHT = cssH;
+            GRID_WIDTH = Math.max(1, Math.floor(CANVAS_WIDTH / GRID_SIZE));
+            GRID_HEIGHT = Math.max(1, Math.floor(CANVAS_HEIGHT / GRID_SIZE));
+        }
         // =====================
         // 单词池内嵌（按等级A1/A2/B1/B2/C从DOM读取）
         // =====================
@@ -11295,6 +11509,78 @@
         const settingsModal = document.getElementById('settingsModal');
         const settingsCloseBtn = document.getElementById('settingsCloseBtn');
         
+        // ===== 移动端开始界面弹窗逻辑 =====
+        const loginModal = document.getElementById('loginModal');
+        const instructionsModal = document.getElementById('instructionsModal');
+        const loginConfirmBtn = document.getElementById('loginConfirmBtn');
+        const loginCancelBtn = document.getElementById('loginCancelBtn');
+        const usernameMobileInput = document.getElementById('usernameMobile');
+        const instructionsCloseBtn = document.getElementById('instructionsCloseBtn');
+        const instructionsContent = document.getElementById('instructionsContent');
+        const isMobile = window.matchMedia('(max-width: 600px)').matches;
+
+        // 将右侧的说明复制到说明弹窗中
+        const startInstructionsFromRight = document.getElementById('startInstructions');
+        if (instructionsContent && startInstructionsFromRight) {
+            instructionsContent.innerHTML = startInstructionsFromRight.innerHTML;
+        }
+
+        function openOverlay(el) {
+            if (!el) return;
+            el.style.display = 'flex';
+            el.setAttribute('aria-hidden', 'false');
+        }
+        function closeOverlay(el) {
+            if (!el) return;
+            el.style.display = 'none';
+            el.setAttribute('aria-hidden', 'true');
+        }
+
+        // start-grid 内两张卡片依次为：用户账户、游戏说明
+        const startCards = document.querySelectorAll('.start-grid .start-card');
+        if (isMobile && startCards && startCards.length >= 2) {
+            startCards[0].style.cursor = 'pointer';
+            startCards[0].addEventListener('click', () => openOverlay(loginModal));
+            startCards[1].style.cursor = 'pointer';
+            startCards[1].addEventListener('click', () => openOverlay(instructionsModal));
+        }
+
+        if (loginConfirmBtn && usernameMobileInput) {
+            loginConfirmBtn.addEventListener('click', () => {
+                const v = (usernameMobileInput.value || '').trim();
+                if (!v) {
+                    alert('Please enter a username');
+                    return;
+                }
+                currentUser = v;
+                localStorage.setItem('snake_current_user', v);
+                if (currentUserEl) currentUserEl.textContent = v;
+                if (loginSection) loginSection.style.display = 'none';
+                if (userInfoSection) userInfoSection.style.display = '';
+                closeOverlay(loginModal);
+            });
+        }
+        if (loginCancelBtn) {
+            loginCancelBtn.addEventListener('click', () => closeOverlay(loginModal));
+        }
+        if (instructionsCloseBtn) {
+            instructionsCloseBtn.addEventListener('click', () => closeOverlay(instructionsModal));
+        }
+
+        // 移动端：未登录直接以“游客”开始游戏（不再弹窗/卡住）
+        if (enterGameBtn) {
+            enterGameBtn.addEventListener('click', () => {
+                if (isMobile && !currentUser) {
+                    currentUser = 'Guest';
+                    localStorage.setItem('snake_current_user', currentUser);
+                    if (currentUserEl) currentUserEl.textContent = currentUser;
+                    if (loginSection) loginSection.style.display = 'none';
+                    if (userInfoSection) userInfoSection.style.display = '';
+                }
+                // 继续按现有逻辑开始游戏
+            }, true);
+        }
+        
         // =====================
         // 初始化游戏
         // =====================
@@ -11324,7 +11610,7 @@
                 try {
                     loadWordsForLevel(selectedLevel);
                 } catch (e) {
-                    console.warn('加载失败，使用A2默认词库');
+                    console.warn('Load failed, using A2 default word pool');
                     selectedLevel = 'A2';
                     loadWordsForLevel('A2');
                 }
@@ -11350,7 +11636,7 @@
          */
         function selectNewWord() {
             if (!wordPool || wordPool.length === 0) {
-                console.error('单词池为空，无法选择单词');
+                console.error('Word pool is empty, cannot select word');
                 return;
             }
             // 随机选择一个单词
@@ -11560,7 +11846,7 @@
          * 头部用青色(#14ffec)，身体用深青色(#0d7377)
          * 头部会根据方向绘制眼睛（小黑点）
          */
-         function drawSnake() {
+        function drawSnake() {
             snake.forEach((segment, index) => {
                 // 绘制黑色身体
                 ctx.fillStyle = '#000';
@@ -11579,7 +11865,7 @@
                 ctx.strokeRect(
                     segment.x * GRID_SIZE + 0.5,
                     segment.y * GRID_SIZE + 0.5,
-                    GRID_SIZE - 1,
+                    GRID_SIZE - 1, 
                     GRID_SIZE - 1
                 );
                 
@@ -11645,7 +11931,8 @@
                 
                 // 绘制字母（白色，粗体）
                 ctx.fillStyle = 'white';
-                ctx.font = 'bold 16px Arial';
+                const fontPx = Math.max(12, Math.floor(GRID_SIZE * 0.8));
+                ctx.font = `bold ${fontPx}px Arial`;
                 ctx.textAlign = 'center';      // 居中对齐
                 ctx.textBaseline = 'middle';   // 垂直居中
                 ctx.fillText(
@@ -11711,7 +11998,15 @@
                         highScoreEl.textContent = highScore;
                         saveHighScore();  // 保存到本地存储
                     }
-                    
+
+                    // 完成单词时按“单词长度 - 2”缩短蛇身；保留最小长度3
+                    // 若（单词长度 - 2）<= 0，则本次不缩短
+                    const shrinkBy = Math.max(0, currentWord.german.length - 2);
+                    if (shrinkBy > 0 && snake.length > 3) {
+                        const targetLen = Math.max(3, snake.length - shrinkBy);
+                        snake.length = targetLen;
+                    }
+
                     // 选择新单词
                     selectNewWord();
                 }
@@ -11904,6 +12199,54 @@
             }
         }, { passive: false });
 
+        /* === 触摸滑动控制（移动端）=== */
+        (function enableTouchControls() {
+            const canvasEl = document.getElementById('gameCanvas');
+            if (!canvasEl) return;
+            let touchStartX = 0, touchStartY = 0, tracking = false;
+            const SWIPE_THRESHOLD = 20; // 滑动判定阈值（像素）
+
+            function onTouchStart(e) {
+                if (!gameRunning || gamePaused) return;
+                const t = e.touches[0];
+                touchStartX = t.clientX;
+                touchStartY = t.clientY;
+                tracking = true;
+                e.preventDefault();
+            }
+
+            function onTouchMove(e) {
+                if (!tracking) return;
+                e.preventDefault(); // 避免页面跟随滚动
+            }
+
+            function onTouchEnd(e) {
+                if (!tracking) return;
+                tracking = false;
+
+                const t = (e.changedTouches && e.changedTouches[0]) || null;
+                if (!t) return;
+
+                const dx = t.clientX - touchStartX;
+                const dy = t.clientY - touchStartY;
+
+                if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0 && direction !== 'left') nextDirection = 'right';
+                    if (dx < 0 && direction !== 'right') nextDirection = 'left';
+                } else {
+                    if (dy > 0 && direction !== 'up') nextDirection = 'down';
+                    if (dy < 0 && direction !== 'down') nextDirection = 'up';
+                }
+                e.preventDefault();
+            }
+
+            canvasEl.addEventListener('touchstart', onTouchStart, { passive: false });
+            canvasEl.addEventListener('touchmove', onTouchMove, { passive: false });
+            canvasEl.addEventListener('touchend', onTouchEnd, { passive: false });
+        })();
+
         /**
          * 键盘控制：方向键和WASD
          * 使用nextDirection缓冲按键，避免同一帧多次变向
@@ -11951,7 +12294,7 @@
         startBtn.addEventListener('click', () => {
             // 检查是否登录
             if (!currentUser) {
-                alert('请先登录账户！');
+                alert('Please login first!');
                 return;
             }
             
@@ -11962,10 +12305,15 @@
                     cancelAnimationFrame(animationId);
                     animationId = null;
                 }
+                // 开始前适配移动端画布，桌面端兜底同步
+                fitCanvasToMobile();
+                if (!(isTouchDevice() || window.matchMedia('(max-width: 900px)').matches)) {
+                    updateGridFromCanvas();
+                }
                 initGame();                           // 初始化游戏状态
                 gameRunning = true;                   // 标记游戏运行中
                 gamePaused = false;                   // 取消暂停
-                startBtn.innerHTML = '<i class=\"fas fa-play\"></i> 重新开始';
+                startBtn.innerHTML = '<i class=\"fas fa-play\"></i> Restart';
                 lastMoveTime = 0;                     // 重置节流基准
                 animationId = requestAnimationFrame(gameLoop);       // 启动游戏循环
             } else {
@@ -11974,29 +12322,112 @@
             }
         });
         
-        // 进入游戏按钮（开始覆盖层）
+        // 辅助函数：更稳妥判断“移动端/触摸环境”
+        function isTouchDevice() {
+            return ('ontouchstart' in window)
+                || (navigator.maxTouchPoints > 0)
+                || window.matchMedia('(pointer: coarse)').matches;
+        }
+
+        /**
+         * 将 canvas 适配为手机竖屏：宽度占满容器，高度不超过可视区剩余空间。
+         * 同时按 devicePixelRatio 放大内部像素，保证像素风清晰。
+         */
+        function fitCanvasToMobile() {
+            const mobile = isTouchDevice() || window.matchMedia('(max-width: 900px)').matches;
+            if (!mobile) return;
+
+            const wrapper = document.querySelector('.canvas-wrapper');
+            const canvas = document.getElementById('gameCanvas');
+            if (!wrapper || !canvas) return;
+
+            const availW = Math.max(1, Math.floor(wrapper.clientWidth));
+            const rect = wrapper.getBoundingClientRect();
+            const viewportH = window.innerHeight || document.documentElement.clientHeight;
+            const maxAvailH = Math.max(180, Math.floor(viewportH - rect.top - 16));
+            const targetH = Math.min(maxAvailH, Math.round(availW * 1.6));
+
+            canvas.style.width = availW + 'px';
+            canvas.style.height = targetH + 'px';
+
+            // 同步逻辑画布与网格尺寸
+            updateGridFromCanvas();
+
+            const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+            canvas.width = availW * dpr;
+            canvas.height = targetH * dpr;
+            const ctx = canvas.getContext('2d');
+            if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        // 旋转/尺寸变化时重新适配
+        window.addEventListener('resize', fitCanvasToMobile, { passive: true });
+        window.addEventListener('orientationchange', fitCanvasToMobile);
+
+        // 进入游戏按钮（开始覆盖层）- 合并移动端与桌面端逻辑
         enterGameBtn.addEventListener('click', () => {
-            // 检查登录
-            if (!currentUser) {
-                alert('请先登录账户！');
+            const mobileMode =
+                isTouchDevice()
+                || window.matchMedia('(max-width: 900px)').matches
+                || (document.querySelector('.start-grid') && getComputedStyle(document.querySelector('.start-grid')).display === 'none');
+
+            // 移动端/触摸环境：未登录则自动游客
+            if (!currentUser && mobileMode) {
+                currentUser = '游客';
+                localStorage.setItem('snake_current_user', currentUser);
+                if (currentUserEl) currentUserEl.textContent = currentUser;
+                if (loginSection) loginSection.style.display = 'none';
+                if (userInfoSection) userInfoSection.style.display = '';
+                if (startBtn) startBtn.disabled = false; // 移动端返回后确保可点击开始
+                console.log('[ENTER] mobile guest injected');
+            }
+
+            // 桌面端仍要求登录
+            if (!currentUser && !mobileMode) {
+                alert('Please login first!');
+                console.warn('[ENTER] blocked: no user (desktop mode)');
                 return;
             }
-            // 根据选择直接使用等级值
-            selectedLevel = difficultySelect.value;
+
+            // 应用难度
+            selectedLevel = (difficultySelect && difficultySelect.value) ? difficultySelect.value : 'A2';
+            console.log('[ENTER] selected level:', selectedLevel);
+
             // 加载词库（内嵌JSON）
             try {
                 loadWordsForLevel(selectedLevel);
-                if (!wordPool || wordPool.length === 0) throw new Error('词库为空');
+                if (!wordPool || wordPool.length === 0) throw new Error('Word pool is empty');
             } catch (err) {
-                console.error(err);
-                alert('词库加载失败，请检查对应难度下的内嵌JSON。');
+                console.error('[ENTER] loadWordsForLevel error:', err);
+                alert('Failed to load word pool. Please check the embedded JSON for the selected difficulty.');
                 return;
             }
-            // 隐藏开始覆盖层
-            startOverlay.style.display = 'none';
-            // 展示仅游戏布局
-            document.getElementById('contentRoot').classList.add('game-only');
-            // 顶部词汇栏已内置于游戏区，无需移动节点
+
+            // 关闭开始覆盖层，切换布局
+            if (startOverlay) startOverlay.style.display = 'none';
+            const root = document.getElementById('contentRoot');
+            if (root) root.classList.add('game-only');
+
+            // 防止并发循环
+            if (typeof animationId !== 'undefined' && animationId !== null) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+
+            // 在启动游戏前做一次尺寸适配（仅移动端有效）
+            fitCanvasToMobile();
+            // 非移动端也同步一次逻辑宽高（避免窗口变化导致不一致）
+            if (!(isTouchDevice() || window.matchMedia('(max-width: 900px)').matches)) {
+                updateGridFromCanvas();
+            }
+
+            // 启动游戏
+            initGame();
+            gameRunning = true;
+            gamePaused = false;
+            lastMoveTime = 0;
+            animationId = requestAnimationFrame(gameLoop);
+            console.log('[ENTER] game started');
         });
         
         /**
@@ -12020,6 +12451,17 @@
                     lastMoveTime = 0;
                     animationId = requestAnimationFrame(gameLoop);
                 }, 100);
+            } else {
+                // 结束状态下也能直接启动
+                fitCanvasToMobile();
+                if (!(isTouchDevice() || window.matchMedia('(max-width: 900px)').matches)) {
+                    updateGridFromCanvas();
+                }
+                gameRunning = true;
+                gamePaused = false;
+                lastMoveTime = 0;
+                if (animationId !== null) cancelAnimationFrame(animationId);
+                animationId = requestAnimationFrame(gameLoop);
             }
         });
         
@@ -12032,8 +12474,8 @@
             
             // 更新按钮文字和图标
             pauseBtn.innerHTML = gamePaused ? 
-                '<i class="fas fa-play"></i> 继续' :  // 暂停中：显示"继续"
-                '<i class="fas fa-pause"></i> 暂停';  // 运行中：显示"暂停"
+                '<i class="fas fa-play"></i> Resume' :  // 暂停中：显示"继续"
+                '<i class="fas fa-pause"></i> Pause';  // 运行中：显示"暂停"
             // 暂停时取消动画帧，继续时重新申请
             if (gamePaused) {
                 if (animationId !== null) {
@@ -12061,13 +12503,16 @@
             try {
                 loadWordsForLevel(level);
                 selectedLevel = level;
-                if (!wordPool || wordPool.length === 0) throw new Error('词库为空');
+                if (!wordPool || wordPool.length === 0) throw new Error('Word pool is empty');
             } catch (err) {
                 console.error(err);
-                alert('词库加载失败，回退到默认难度。');
+                alert('Failed to load word pool. Reverting to default difficulty.');
                 loadWordsForLevel('A2');
             }
             
+            // 重新开始游戏前进行一次尺寸适配
+            fitCanvasToMobile();
+
             // 重新开始游戏
             initGame();
             gameRunning = true;
@@ -12080,6 +12525,8 @@
             // 仅关闭模态，停留在结束状态
             gameOverModal.style.display = 'none';
             gameOverModal.setAttribute('aria-hidden', 'true');
+            // 启用开始按钮，允许用户重新开局
+            if (startBtn) startBtn.disabled = false;
         });
         
         // 设置按钮事件
@@ -12123,14 +12570,14 @@
         // 从内嵌<script type="application/json">读取指定等级词库
         function loadWordsForLevel(level) {
             const node = document.getElementById(`words-${level}`);
-            if (!node) throw new Error('未找到等级词库节点: ' + level);
+            if (!node) throw new Error('Word pool node not found for level: ' + level);
             let data = [];
             try {
                 data = JSON.parse(node.textContent || '[]');
             } catch (e) {
-                throw new Error('词库JSON解析失败: ' + level);
+                throw new Error('Failed to parse word pool JSON for level: ' + level);
             }
-            if (!Array.isArray(data)) throw new Error('词库格式错误，应为数组: ' + level);
+            if (!Array.isArray(data)) throw new Error('Word pool format error, expected array for level: ' + level);
             wordPool = data;
         }
     </script>
